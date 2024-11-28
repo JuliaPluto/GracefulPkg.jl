@@ -9,7 +9,7 @@ For example, when resolving an environment that was originally created in anothe
 ## Use in Pluto.jl
 *(TODO)* GracefulPkg.jl is used by [Pluto.jl](https://plutojl.org/) when launching a notebook with an embedded package environment. Pluto will try to reproduce the environment used to write the notebook. If this does not work, the strategies from GracefulPkg are used to make sure that the notebook can still launch.
 
-
+TODO this code is currently still in the Pluto codebase as the function `with_auto_fixes`.
 
 ## Strategies
 GracefulPkg comes with the following strategies as defaults:
