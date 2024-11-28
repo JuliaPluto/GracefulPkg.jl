@@ -31,25 +31,49 @@ end
 
 
 
-# @testset "crash" begin
-#     result = GracefulPkg.gracefully(() -> error(9898))
+@testset "crash" begin
+
+    destroy_me = tempname()
+    mkpath(destroy_me)
+    write(joinpath(destroy_me, "Project.toml"), "nfsdfdse\"")
+    write(joinpath(destroy_me, "Manifest.toml"), "whatever")
+
+    i = Ref(100)
+
+    ex = try
+        GracefulPkg.gracefully(; env_dir=destroy_me) do
+            i[] += 1
+            throw(i[])
+        end
+        nothing
+    catch e
+        e
+    end
+
+    @test ex isa Exception
+    @test ex isa GracefulPkg.NothingWorked
 
 
-#     @test result isa GracefulPkg.GraceReport
+    result = ex.report
 
-#     r = only(result.strategy_reports)
+    @test result isa GracefulPkg.GraceReport
 
-#     @test r isa GracefulPkg.StrategyReport
+    @test length(result.strategy_reports) > 1
 
 
-#     @test r.snapshot_before == r.snapshot_after
-#     @test !isempty(r.snapshot_before.project)
-#     @test !isempty(r.snapshot_before.manifest)
+    f = first(result.strategy_reports)
+    @test f.strategy isa GracefulPkg.StrategyDoNothing
+    @test !f.success
+    @test f.exception == 101
 
-#     @test !r.project_changed
-#     @test !r.manifest_changed
-#     @test !r.registry_changed
+    @test f.snapshot_before.manifest == "whatever"
 
-# end
+    r = last(result.strategy_reports)
+    @test typeof(r.strategy) !== GracefulPkg.StrategyDoNothing
+
+    @test r.return_value === nothing
+    @test r.exception > 101
+    @test !r.success
+end
 
 
