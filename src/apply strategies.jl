@@ -1,0 +1,103 @@
+
+
+
+
+struct NothingWorked <: Exception
+    report::GraceReport
+end
+
+
+
+
+
+
+
+const DEFAULT_STRATEGIES = (
+    StrategyDoNothing(),
+    StrategyUpdateRegistry(),
+    StrategyRemoveManifest(),
+    # StrategyRemoveProject(),
+)
+
+"""
+
+
+# Keyword arguments:
+- `throw::Bool=true`: If nothing worked, throw?
+"""
+function gracefully(
+    task::Function;
+    strategies::Vector{Strategy}=collect(DEFAULT_STRATEGIES),
+    throw::Bool=true,
+    env_dir::String=dirname(Pkg.project().path),
+)
+    reports = StrategyReport[]
+
+    for strategy in strategies
+        snapshot_before = take_project_manifest_snapshot(env_dir)
+
+        context = StrategyContext(;
+            env_dir,
+            previous_reports=reports,
+            previous_exception=isempty(reports) ? nothing : last(reports).exception,
+        )
+
+        skip = !condition(strategy, context)
+        if skip
+            continue
+        end
+
+        text = action_text(strategy)
+        isempty(text) || @warn "Pkg operation failed. $(text) and trying again..."
+
+        # try to fix it!
+        action(strategy, context)
+        snapshot_after = take_project_manifest_snapshot(env_dir)
+
+        success, return_value, exception, backtrace = try
+            # do the user task
+            val = task()
+
+            (true, val, nothing, nothing)
+        catch e
+            (false, nothing, e, catch_backtrace())
+        end
+
+
+        report = StrategyReport(;
+            strategy,
+            success,
+
+            #
+            return_value,
+            exception,
+            backtrace,
+
+            #
+            snapshot_before,
+            snapshot_after,
+
+            #
+            project_changed=snapshot_before.project != snapshot_after.project,
+            manifest_changed=snapshot_before.manifest != snapshot_after.manifest,
+            registry_changed=can_change_registry(strategy),
+        )
+
+        push!(reports, report)
+
+        if success
+            break
+        end
+    end
+
+
+    report = GraceReport(
+        reports,
+    )
+
+    if throw && !last(reports).success
+        Base.throw(NothingWorked(report))
+    end
+
+    report
+end
