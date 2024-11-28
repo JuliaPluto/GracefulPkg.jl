@@ -34,6 +34,7 @@ function gracefully(
     reports = StrategyReport[]
 
     for strategy in strategies
+        @debug "Starting strat" strategy
         snapshot_before = take_project_manifest_snapshot(env_dir)
 
         context = StrategyContext(;
