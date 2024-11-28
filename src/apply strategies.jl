@@ -17,6 +17,7 @@ end
 const DEFAULT_STRATEGIES = (
     StrategyDoNothing(),
     StrategyUpdateRegistry(),
+    StrategyLoosenCompat(),
     StrategyRemoveManifest(),
     # StrategyRemoveProject(),
 )

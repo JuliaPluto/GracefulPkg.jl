@@ -6,7 +6,7 @@ import Pkg
 
 function go(original_dir)
 
-    dir = tempname()
+    dir = tempname() * " grace " * basename(original_dir)
 
     cp(original_dir, dir)
 

@@ -4,6 +4,3 @@ strats = [r.strategy for r in result.strategy_reports]
 @test strats == [GracefulPkg.StrategyDoNothing()]
 
 
-
-
-# @test result isa GracefulPkg.

@@ -7,7 +7,9 @@ const pluto_test_registry_spec = Pkg.RegistrySpec(;
     uuid=Base.UUID("96d04d5f-8721-475f-89c4-5ee455d3eda0"),
     name="PlutoPkgTestRegistry",
 )
-Pkg.Registry.add(pluto_test_registry_spec)
+if basename(homedir()) != "fons"
+    Pkg.Registry.add(pluto_test_registry_spec)
+end
 
 
 
