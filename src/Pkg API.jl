@@ -1,6 +1,7 @@
 import Pkg
+using Compat
 
-public resolve
+@compat public resolve
 
 """
 ```julia

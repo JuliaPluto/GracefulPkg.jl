@@ -1,5 +1,7 @@
 
+using Compat
 
+@compat public gracefully
 
 
 struct NothingWorked <: Exception
