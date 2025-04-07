@@ -32,7 +32,7 @@ function gracefully(
     task::Function;
     strategies::Vector{Strategy}=collect(DEFAULT_STRATEGIES),
     throw::Bool=true,
-    env_dir::String=dirname(Pkg.project().path),
+    env_dir::String=dirname(Base.active_project()),
 )
     reports = StrategyReport[]
 
