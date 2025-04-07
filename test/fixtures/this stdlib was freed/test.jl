@@ -5,5 +5,8 @@ strats = [r.strategy for r in result.strategy_reports]
 
 proj, man = final_project_manifest_parsed(result)
 
-@test proj == nothing
-@test man == nothing
+
+@test sort(collect(keys(proj["deps"]))) == ["Statistics"]
+
+# should not get added
+@test !haskey(proj, "compat")

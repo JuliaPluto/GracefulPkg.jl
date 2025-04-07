@@ -1,0 +1,1 @@
+`simple` but I changed the the manifest version by hand
