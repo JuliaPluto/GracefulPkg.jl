@@ -16,10 +16,13 @@ end
 
 const DEFAULT_STRATEGIES = (
     StrategyDoNothing(),
+    StrategyFixStdlibs(),
+    StrategyFixStdlibs(),
+    StrategyFixStdlibs(),
     StrategyUpdateRegistry(),
     StrategyLoosenCompat(),
     StrategyRemoveManifest(),
-    # StrategyRemoveProject(),
+    StrategyRemoveProject(),
 )
 
 """
@@ -46,7 +49,13 @@ function gracefully(
             previous_exception=isempty(reports) ? nothing : last(reports).exception,
         )
 
-        skip = !condition(strategy, context)
+        skip = try
+            !condition(strategy, context)
+        catch e
+            @warn "Strategy condition failed to compute." exception=e
+            true
+        end
+        
         if skip
             continue
         end
@@ -55,7 +64,12 @@ function gracefully(
         isempty(text) || @warn "Pkg operation failed. $(text) and trying again..."
 
         # try to fix it!
-        action(strategy, context)
+        try
+            action(strategy, context)
+        catch e
+            @warn "Strategy failed to run." exception=e
+        end
+
         snapshot_after = take_project_manifest_snapshot(env_dir)
 
         success, return_value, exception, backtrace = try

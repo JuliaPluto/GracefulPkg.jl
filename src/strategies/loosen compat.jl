@@ -8,7 +8,7 @@ action_text(::StrategyLoosenCompat) = "Loosening compatibility bounds"
 
 
 
-function find_culprits(ctx::StrategyContext, d)
+function _find_compat_culprits(ctx::StrategyContext, d)
     error_str = string(ctx.previous_exception)
 
     filter(keys(d["compat"])) do package_name
@@ -31,7 +31,7 @@ function condition(::StrategyLoosenCompat, ctx::StrategyContext)
     haskey(d, "compat") || return false
 
     # does one of the packages with a compat entry occur in the resolver error?
-    return !isempty(find_culprits(ctx, d))
+    return !isempty(_find_compat_culprits(ctx, d))
 end
 
 
@@ -39,22 +39,22 @@ end
 function action(::StrategyLoosenCompat, ctx::StrategyContext)
     m = manifest_file(ctx)
     isfile(m) && rm(m)
-
-
+    
     p = project_file(ctx)
     d = TOML.parsefile(p)
+    culprits = _find_compat_culprits(ctx, d)
 
-    culprits = find_culprits(ctx, d)
+    _delete_compat_entries(ctx, culprits)
+    # TODO: also delete sources! or is that another strat? or maybe that should never be done?
+end
 
+function _delete_compat_entries(ctx::StrategyContext, culprits)
+    p = project_file(ctx)
+    d = TOML.parsefile(p)
     for culprit in culprits
         delete!(d["compat"], culprit)
     end
-
-    # TODO: also delete sources! or is that another strat?
-
     write_project_toml(p, d)
 end
-
-
 
 

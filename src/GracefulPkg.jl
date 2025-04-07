@@ -20,7 +20,7 @@ include("./strategies/nothing.jl")
 include("./strategies/remove project manifest.jl")
 include("./strategies/update registry.jl")
 include("./strategies/loosen compat.jl")
-# include("./strategies/fix stdlibs.jl")
+include("./strategies/fix stdlibs.jl")
 
 
 include("./apply strategies.jl")
