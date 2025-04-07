@@ -23,11 +23,11 @@ function _find_stdlib_culprits(exception_string::String)
         # ANSI escape codes
         r"\\e\[[0-9;]*[a-zA-Z]" => "",
     )
-    @info "Hmmmmmm" exception_string
-    @show(filter(_stdlib_old_or_new) do stdlib
+    
+    filter(_stdlib_old_or_new) do stdlib
         pattern = Regex("(^|[^\\w])$(stdlib)(\$|[^\\w])")
         occursin(pattern, clean_exception_string)
-    end)
+    end
 end
 
 function condition(::StrategyFixStdlibs, ctx::StrategyContext)

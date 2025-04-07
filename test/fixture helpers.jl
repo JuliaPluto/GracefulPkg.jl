@@ -14,8 +14,18 @@ function go(original_dir)
     @assert isdir(dir)
     @assert !isempty(readdir(dir))
 
-    result = Pkg.activate(dir) do
-        GracefulPkg.resolve()
+    try
+        result = Pkg.activate(dir) do
+            GracefulPkg.resolve()
+        end
+    catch e
+        if e isa GracefulPkg.NothingWorked
+            rep = e.report
+            for sr in rep.strategy_reports
+                @error "Testsssss captured exceptions" sr.strategy exception=(sr.exception, sr.backtrace)
+            end
+        end
+        rethrow()
     end
 end
 

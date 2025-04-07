@@ -5,6 +5,3 @@ strats = [r.strategy for r in result.strategy_reports]
 
 @test GracefulPkg.StrategyRemoveManifest() in strats
 @test GracefulPkg.StrategyRemoveProject() in strats
-
-
-# TODO this should work
