@@ -16,6 +16,7 @@ end
 
 const DEFAULT_STRATEGIES = (
     StrategyDoNothing(),
+    # three times, because you might need to fix stdlibs multiple times (first you get an error message about ExampleA, and fixing it reveals an error about ExampleB)
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
@@ -26,10 +27,35 @@ const DEFAULT_STRATEGIES = (
 )
 
 """
+```julia
+gracefully(task::Function; strategies=collect(DEFAULT_STRATEGIES), throw=true, env_dir=dirname(Base.active_project()))
+```
 
+Execute the given `task` function, automatically fixing package environment issues if the task fails.
 
-# Keyword arguments:
-- `throw::Bool=true`: If nothing worked, throw?
+The function will try different strategies in sequence until the task succeeds. Each strategy attempts to fix common package environment issues, such as:
+- Fixing stdlib compatibility issues
+- Updating package registries
+- Loosening version compatibility requirements
+- Removing Manifest.toml or Project.toml files
+
+# Arguments
+- `task::Function`: The function to execute in the package environment
+
+# Keyword Arguments
+- `strategies::Vector{Strategy}=collect(DEFAULT_STRATEGIES)`: List of strategies to try, in order
+- `throw::Bool=true`: If true, throws a `NothingWorked` exception when all strategies fail
+- `env_dir::String=dirname(Base.active_project())`: Directory containing the package environment files
+
+# Returns
+A `GraceReport` containing details about which strategies were attempted and their results.
+
+# Example
+```julia
+gracefully() do
+    Pkg.instantiate()
+end
+```
 """
 function gracefully(
     task::Function;
