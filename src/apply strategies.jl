@@ -11,15 +11,13 @@ end
 
 
 
-
-
-
 const DEFAULT_STRATEGIES = (
     StrategyDoNothing(),
     # three times, because you might need to fix stdlibs multiple times (first you get an error message about ExampleA, and fixing it reveals an error about ExampleB)
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
+    # TODO: StrategyPkgResolve(),
     StrategyUpdateRegistry(),
     StrategyLoosenCompat(),
     StrategyRemoveManifest(),
@@ -78,10 +76,10 @@ function gracefully(
         skip = try
             !condition(strategy, context)
         catch e
-            @warn "Strategy condition failed to compute." exception=e
+            @warn "Strategy condition failed to compute." exception = e
             true
         end
-        
+
         if skip
             continue
         end
@@ -93,7 +91,7 @@ function gracefully(
         try
             action(strategy, context)
         catch e
-            @warn "Strategy failed to run." exception=e
+            @warn "Strategy failed to run." exception = e
         end
 
         snapshot_after = take_project_manifest_snapshot(env_dir)
@@ -106,6 +104,8 @@ function gracefully(
         catch e
             (false, nothing, e, catch_backtrace())
         end
+
+        # TODO: restore the Project+Manifest?
 
 
         report = StrategyReport(;

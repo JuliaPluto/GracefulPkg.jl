@@ -19,6 +19,7 @@ function _find_stdlib_culprits(exception_string::String)
         exception_string, 
         # Pkg.Resolver.whatever can show up in the error message, lets ignore it
         "Pkg." => "", 
+        # not a TOML loading issue
         "TOML Parse" => "",
         # ANSI escape codes
         r"\\e\[[0-9;]*[a-zA-Z]" => "",
@@ -36,7 +37,6 @@ function condition(::StrategyFixStdlibs, ctx::StrategyContext)
     end
         
     # A stdlib name occurs in the error message
-    
     !isempty(_find_stdlib_culprits(ctx))
 end
 
@@ -54,6 +54,8 @@ function action(::StrategyFixStdlibs, ctx::StrategyContext)
     
     @debug "Fixing stdlibs" to_fix culprits string(ctx.previous_exception)
     _delete_compat_entries(ctx, to_fix)
+    # TODO this isnt it... they might not be direct deps
+    # it's about updating
     Pkg.rm(to_fix)
     Pkg.add(to_fix)
     _delete_compat_entries(ctx, to_fix)

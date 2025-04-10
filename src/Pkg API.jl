@@ -1,13 +1,29 @@
 import Pkg
 using Compat
 
-@compat public resolve
+@compat public resolve, instantiate
 
 """
 ```julia
-resolve()
+resolve(args...; kwargs...)
 ```
 
 Like `Pkg.resolve`, but *gracefully*.
 """
-resolve() = gracefully(Pkg.resolve)
+resolve(args...; kwargs...) =
+    gracefully() do
+        Pkg.resolve(args...; kwargs...)
+    end
+
+
+"""
+```julia
+instantiate(args...; kwargs...)
+```
+
+Like `Pkg.instantiate`, but *gracefully*.
+"""
+instantiate(args...; kwargs...) =
+    gracefully() do
+        Pkg.instantiate(args...; kwargs...)
+    end
