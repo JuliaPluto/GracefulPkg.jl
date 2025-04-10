@@ -5,7 +5,7 @@ GracefulPkg can `resolve` or `instantiate` an environment, and automatically fix
 For example, when resolving an environment that was originally created in another Julia version, Pkg might fail. GracefulPkg will automatically deploy strategies to fix it, until the resolve worked. Deleting the Manifest.toml file is one of the strategies, but it will try less invasive strategies first.
 
 > **Why?**
-> The problem that this package solves is to be able to activate **any environment** without user intervention, even if it was created at a different time, on a different Julia version, in a different reality, whatever.
+> The problem that this package solves is to be able to instantiate **any environment** without user intervention, even if it was created at a different time, on a different Julia version, in a different reality, whatever.
 > 
 > You can always just delete Manifest.toml and delete `[compat]` from Project.toml, but this package tries to keep as much of the original environment as possible.
 
