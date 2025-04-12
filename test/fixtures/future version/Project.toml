@@ -1,0 +1,9 @@
+[deps]
+PlutoPkgTestA = "419c6f8d-b8cd-4309-abdc-cee491252f94"
+PlutoPkgTestC = "18c53ed2-8479-4d56-bd92-ce69275a063b"
+
+
+[compat]
+PlutoPkgTestA = "~0.2.1"
+PlutoPkgTestC = "~99.99.99"
+
