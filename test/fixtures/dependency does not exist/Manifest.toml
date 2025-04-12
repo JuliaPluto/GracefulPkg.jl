@@ -31,8 +31,8 @@ uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
 
 [[PlutoPkgTestAAAAA]]
 deps = ["Pkg"]
-git-tree-sha1 = "6c9aa67135641123c559d59ba88e8cb93841773a"
-uuid = "419c6f8d-b8cd-4309-abdc-cee491252f94"
+git-tree-sha1 = "6c3aa67135641123c559d59ba88e8cb93841773a"
+uuid = "419c6f7d-b8cd-4309-abdc-cee491252f94"
 version = "0.2.29999"
 
 [[Printf]]

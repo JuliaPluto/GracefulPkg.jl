@@ -1,5 +1,5 @@
 [deps]
-PlutoPkgTestAAAAA = "419c6f8d-b8cd-4309-abdc-cee491252f94"
+PlutoPkgTestAAAAA = "419c6f7d-b8cd-4309-abdc-cee491252f94"
 
 [compat]
 PlutoPkgTestAAAAA = "~0.2.2"

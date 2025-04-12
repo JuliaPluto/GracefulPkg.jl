@@ -12,7 +12,9 @@ end
 
 const DEFAULT_STRATEGIES = (
     StrategyDoNothing(),
-    # three times, because you might need to fix stdlibs multiple times (first you get an error message about ExampleA, and fixing it reveals an error about ExampleB)
+    # many times, because you might need to fix stdlibs multiple times (first you get an error message about ExampleA, and fixing it reveals an error about ExampleB)
+    StrategyFixStdlibs(),
+    StrategyFixStdlibs(),
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
