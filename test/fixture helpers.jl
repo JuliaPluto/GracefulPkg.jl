@@ -32,6 +32,9 @@ function go(original_dir)
         Pkg.activate(@__DIR__) do
             Pkg.dependencies()
         end
+        # this should work
+        GracefulPkg.instantiate(; update_registry=false, allow_autoprecomp=false)
+
 
         @assert deps_before == get_deps_safe()
 
