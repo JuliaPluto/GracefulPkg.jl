@@ -40,5 +40,6 @@ GracefulPkg comes with the following strategies as defaults:
 
 
 # Test
-This package is tested against a library of Project.toml + Manifest.toml files that we found in the wild, or that we hand-crafted to simulate a possible tricky situation.
+This package is tested against [a library](https://github.com/JuliaPluto/GracefulPkg.jl/tree/main/test/fixtures) of Project.toml + Manifest.toml files that we found in the wild, or that we hand-crafted to simulate a possible tricky situation.
+
 
