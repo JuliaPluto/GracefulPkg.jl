@@ -16,9 +16,9 @@ import Pkg
 Pkg.activate("path/to/your/project")
 
 
-Pkg.instantiate() # fails!
+Pkg.resolve() # fails!
 
-GracefulPkg.instantiate() # works!
+GracefulPkg.resolve() # works!
 ```
 
 
@@ -43,3 +43,4 @@ GracefulPkg comes with the following strategies as defaults:
 This package is tested against [a library](https://github.com/JuliaPluto/GracefulPkg.jl/tree/main/test/fixtures) of Project.toml + Manifest.toml files that we found in the wild, or that we hand-crafted to simulate a possible tricky situation.
 
 
+This package is also tested with some older Julia versions (1.6, 1.8 and 1.9). This increases the number of tricky Julia combinations that we can test against, which hopefully means the package is more robust (for future Julia versions).
