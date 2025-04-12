@@ -6,12 +6,14 @@ struct StrategyLoosenCompat <: Strategy end
 
 action_text(::StrategyLoosenCompat) = "Loosening compatibility bounds"
 
-
-
 function _find_compat_culprits(ctx::StrategyContext, d)
-    error_str = string(ctx.previous_exception)
+    error_str = join(
+        string(rep.exception)
+        for rep in ctx.previous_reports
+    )
 
     filter(keys(d["compat"])) do package_name
+        @info "Checking" package_name error_str
         occursin(package_name, error_str)
     end
 end
@@ -44,6 +46,8 @@ function action(::StrategyLoosenCompat, ctx::StrategyContext)
     d = TOML.parsefile(p)
     culprits = _find_compat_culprits(ctx, d)
 
+    @debug "Loosening compat entries for $(culprits)"
+
     _delete_compat_entries(ctx, culprits)
     # TODO: also delete sources! or is that another strat? or maybe that should never be done?
 end
@@ -51,10 +55,12 @@ end
 function _delete_compat_entries(ctx::StrategyContext, culprits)
     p = project_file(ctx)
     d = TOML.parsefile(p)
-    for culprit in culprits
-        delete!(d["compat"], culprit)
+    if haskey(d, "compat")
+        for culprit in culprits
+            delete!(d["compat"], culprit)
+        end
+        write_project_toml(p, d)
     end
-    write_project_toml(p, d)
 end
 
 
