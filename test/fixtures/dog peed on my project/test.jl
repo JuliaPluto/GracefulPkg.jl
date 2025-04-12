@@ -4,4 +4,5 @@ strats = [r.strategy for r in result.strategy_reports]
 @test last(result.strategy_reports).success
 
 @test GracefulPkg.StrategyRemoveManifest() in strats
+@test GracefulPkg.StrategyRemoveManifestAndCompat() in strats
 @test GracefulPkg.StrategyRemoveProject() in strats
