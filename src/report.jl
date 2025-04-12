@@ -1,3 +1,7 @@
+using Compat
+
+@compat public StrategyReport, GraceReport, is_success
+
 
 Base.@kwdef struct StrategyReport
     strategy::Strategy
@@ -25,3 +29,5 @@ struct GraceReport
 end
 
 
+is_success(rep::StrategyReport) = rep.success
+is_success(rep::GraceReport) = any(Iterators.map(is_success, rep.strategy_reports))

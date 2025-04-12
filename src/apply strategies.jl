@@ -1,14 +1,13 @@
-
 using Compat
 
-@compat public gracefully
+@compat public StrategyDoNothing, StrategyFixStdlibs, StrategyUpdateRegistry, StrategyLoosenCompat, StrategyRemoveManifest, StrategyRemoveManifestAndCompat, StrategyRemoveProject
+
+@compat public gracefully, DEFAULT_STRATEGIES, NothingWorked
 
 
 struct NothingWorked <: Exception
     report::GraceReport
 end
-
-
 
 
 const DEFAULT_STRATEGIES = (
@@ -27,7 +26,7 @@ const DEFAULT_STRATEGIES = (
 
 """
 ```julia
-gracefully(task::Function; strategies=collect(DEFAULT_STRATEGIES), throw=true, env_dir=dirname(Base.active_project()))
+gracefully(task::Function; strategies=collect(DEFAULT_STRATEGIES), throw=true, env_dir=dirname(Base.active_project()))::GraceReport
 ```
 
 Execute the given `task` function, automatically fixing package environment issues if the task fails.
@@ -61,7 +60,7 @@ function gracefully(
     strategies::Vector{Strategy}=collect(DEFAULT_STRATEGIES),
     throw::Bool=true,
     env_dir::String=dirname(Base.active_project()),
-)
+)::GraceReport
     reports = StrategyReport[]
 
     for strategy in strategies
