@@ -1,4 +1,5 @@
 import Pkg
+import Compat
 
 struct StrategyFixStdlibs <: Strategy end
 
@@ -15,27 +16,37 @@ const _stdlib_old_or_new = sort(union(_stdlibs_including_former_stdlibs, _stdlib
 _find_stdlib_culprits(ctx::StrategyContext) = _find_stdlib_culprits(string(ctx.previous_exception))
 
 function _find_stdlib_culprits(exception_string::String)
-    clean_exception_string = replace(
-        exception_string, 
-        # Pkg.Resolver.whatever can show up in the error message, lets ignore it
-        "Pkg." => "", 
-        # not a TOML loading issue
-        "TOML Parse" => "",
+    clean_exception_string = replace(replace(replace(
+                exception_string,
+                # Pkg.Resolver.whatever can show up in the error message, lets ignore it
+                "Pkg." => ""),
+            # not a TOML loading issue
+            "TOML Parse" => ""),
         # ANSI escape codes
         r"\\e\[[0-9;]*[a-zA-Z]" => "",
     )
-    
+
     filter(_stdlib_old_or_new) do stdlib
         pattern = Regex("(^|[^\\w])$(stdlib)(\$|[^\\w])")
         occursin(pattern, clean_exception_string)
     end
 end
 
-function condition(::StrategyFixStdlibs, ctx::StrategyContext)
+function condition(s::StrategyFixStdlibs, ctx::StrategyContext)
     if last(ctx.previous_reports).snapshot_after.project === nothing
         return false
     end
-        
+
+    if length(ctx.previous_reports) > 2
+        a, b = ctx.previous_reports[end-1:end]
+        if a.strategy == s && b.strategy == s
+            if string(a.exception) == string(b.exception)
+                # not going anywhere
+                return false
+            end
+        end
+    end
+
     # A stdlib name occurs in the error message
     !isempty(_find_stdlib_culprits(ctx))
 end
@@ -45,23 +56,40 @@ end
 function action(::StrategyFixStdlibs, ctx::StrategyContext)
     culprits = _find_stdlib_culprits(ctx)
     deps = let
+        manif = TOML.parsefile(manifest_file(ctx))
+        keys(get_manifest_deps(manif))
+    end
+
+    to_fix = intersect(culprits, deps)
+
+    direct_deps = let
         proj = TOML.parsefile(project_file(ctx))
         keys(get(proj, "deps", Dict()))
     end
-    
-    to_fix = intersect(culprits, deps)
-    isempty(to_fix) && return
-    
+
+    to_temporarily_add = setdiff(culprits, direct_deps)
+
     @debug "Fixing stdlibs" to_fix culprits string(ctx.previous_exception)
+
+    isempty(to_fix) && return
+
     _delete_compat_entries(ctx, to_fix)
-    # TODO this isnt it... they might not be direct deps
-    # it's about updating
-    Pkg.rm(to_fix)
-    Pkg.add(to_fix)
+    withenv("JULIA_PKG_PRECOMPILE_AUTO" => false) do
+        isempty(to_temporarily_add) || Pkg.add(to_temporarily_add)
+        Pkg.update(to_fix)
+        isempty(to_temporarily_add) || Pkg.rm(to_temporarily_add)
+    end
     _delete_compat_entries(ctx, to_fix)
 
 end
 
 
 
+function get_manifest_deps(d)
+    if get(d, "manifest_format", "1.0") == "2.0"
+        get(d, "deps", Dict{String,Any}())
+    else
+        d
+    end
+end
 
