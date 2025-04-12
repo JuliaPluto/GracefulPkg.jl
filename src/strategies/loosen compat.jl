@@ -39,7 +39,7 @@ end
 function action(::StrategyLoosenCompat, ctx::StrategyContext)
     m = manifest_file(ctx)
     isfile(m) && rm(m)
-    
+
     p = project_file(ctx)
     d = TOML.parsefile(p)
     culprits = _find_compat_culprits(ctx, d)
@@ -56,5 +56,33 @@ function _delete_compat_entries(ctx::StrategyContext, culprits)
     end
     write_project_toml(p, d)
 end
+
+
+
+
+
+
+################
+
+
+struct StrategyRemoveManifestAndCompat <: Strategy end
+
+action_text(::StrategyRemoveManifestAndCompat) = "Removing Manifest.toml file and all compat entries"
+
+condition(::StrategyRemoveManifestAndCompat, ctx::StrategyContext) = isfile(manifest_file(ctx)) || isfile(project_file(ctx)) # TODO check if has compat
+
+function action(::StrategyRemoveManifestAndCompat, ctx::StrategyContext)
+    m = manifest_file(ctx)
+    p = project_file(ctx)
+
+    isfile(m) && rm(m)
+    @assert !isfile(m)
+
+    p = project_file(ctx)
+    d = TOML.parsefile(p)
+    haskey(d, "compat") && delete!(d, "compat")
+    write_project_toml(p, d)
+end
+
 
 
