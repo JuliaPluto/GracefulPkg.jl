@@ -1,0 +1,13 @@
+[deps]
+HypertextLiteral = "ac1192a8-f4b3-4bfe-ba22-af5b92cd3ab2"
+ImageIO = "82e4d734-157c-48bb-816b-45c225c6df19"
+Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
+PlutoTeachingTools = "661c6b06-c737-4d37-b85c-46df65de6f69"
+PlutoUI = "7f904dfe-b85e-4ff6-b463-dae2292396a8"
+
+[compat]
+HypertextLiteral = "~0.9.4"
+ImageIO = "~0.6.7"
+Images = "~0.25.2"
+PlutoTeachingTools = "~0.3.1"
+PlutoUI = "~0.7.48"
