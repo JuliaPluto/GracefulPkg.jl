@@ -1,4 +1,4 @@
-# GracefulPkg.jl *(WIP)*
+# GracefulPkg.jl
 
 GracefulPkg can `resolve` or `instantiate` an environment, and automatically fix issues when they happen! 
 

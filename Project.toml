@@ -2,7 +2,7 @@ name = "GracefulPkg"
 uuid = "828d9ff0-206c-6161-646e-6576656f7244"
 license = "MIT"
 authors = ["Fons van der Plas <fons@plutojl.org>"]
-version = "0.1.0"
+version = "1.0.0"
 
 [deps]
 Compat = "34da2185-b29b-5c13-b0c7-acf172513d20"
