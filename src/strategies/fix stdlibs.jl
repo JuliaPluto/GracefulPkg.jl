@@ -1,16 +1,23 @@
 import Pkg
-import Compat
+using Compat
+
+@compat public stdlibs_present, stdlibs_past_future, stdlibs_past_present_future
 
 struct StrategyFixStdlibs <: Strategy end
 
 action_text(::StrategyFixStdlibs) = "Fixing stdlib dependencies"
 
 
-# You need to regenerate this list for every new Julia version. Just do sort(union(Pluto._stdlibs_including_former_stdlibs, Pluto._stdlibs_found)) |> repr |> clipboaard
-const _stdlibs_including_former_stdlibs = ["ArgTools", "Artifacts", "Base64", "CRC32c", "CompilerSupportLibraries_jll", "Dates", "DelimitedFiles", "Distributed", "Downloads", "FileWatching", "Future", "GMP_jll", "InteractiveUtils", "JuliaSyntaxHighlighting", "LLD_jll", "LLVMLibUnwind_jll", "LazyArtifacts", "LibCURL", "LibCURL_jll", "LibGit2", "LibGit2_jll", "LibOSXUnwind_jll", "LibSSH2_jll", "LibUV_jll", "LibUnwind_jll", "Libdl", "LinearAlgebra", "Logging", "MPFR_jll", "Markdown", "MbedTLS_jll", "Mmap", "MozillaCACerts_jll", "NetworkOptions", "OpenBLAS_jll", "OpenLibm_jll", "OpenSSL_jll", "PCRE2_jll", "Pkg", "Printf", "Profile", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "StyledStrings", "SuiteSparse", "SuiteSparse_jll", "TOML", "Tar", "Test", "UUIDs", "Unicode", "Zlib_jll", "dSFMT_jll", "libLLVM_jll", "libblastrampoline_jll", "nghttp2_jll", "p7zip_jll"]
-const _stdlibs_found = sort(readdir(Sys.STDLIB))
+# You need to regenerate this list for every new Julia version. Just do sort(union(Pluto.stdlibs_past_future, Pluto.stdlibs_present)) |> repr |> clipboaard
+# Last update: Julia 1.12 beta1
+"All stdlibs that are ever known to exist."
+const stdlibs_past_future = String["ArgTools", "Artifacts", "Base64", "CRC32c", "CompilerSupportLibraries_jll", "Dates", "DelimitedFiles", "Distributed", "Downloads", "FileWatching", "Future", "GMP_jll", "InteractiveUtils", "JuliaSyntaxHighlighting", "LLD_jll", "LLVMLibUnwind_jll", "LazyArtifacts", "LibCURL", "LibCURL_jll", "LibGit2", "LibGit2_jll", "LibOSXUnwind_jll", "LibSSH2_jll", "LibUV_jll", "LibUnwind_jll", "Libdl", "LinearAlgebra", "Logging", "MPFR_jll", "Markdown", "MbedTLS_jll", "Mmap", "MozillaCACerts_jll", "NetworkOptions", "OpenBLAS_jll", "OpenLibm_jll", "OpenSSL_jll", "PCRE2_jll", "Pkg", "Printf", "Profile", "REPL", "Random", "SHA", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "StyledStrings", "SuiteSparse", "SuiteSparse_jll", "TOML", "Tar", "Test", "UUIDs", "Unicode", "Zlib_jll", "dSFMT_jll", "libLLVM_jll", "libblastrampoline_jll", "nghttp2_jll", "p7zip_jll"]
 
-const _stdlib_old_or_new = sort(union(_stdlibs_including_former_stdlibs, _stdlibs_found))
+"All stdlibs for the current Julia installation."
+const stdlibs_present = sort(readdir(Sys.STDLIB))
+
+"Union of [`stdlibs_present`](@ref) and [`stdlibs_past_future`](@ref)."
+const stdlibs_past_present_future = sort(union(stdlibs_past_future, stdlibs_present))
 
 
 _find_stdlib_culprits(ctx::StrategyContext) = _find_stdlib_culprits(string(ctx.previous_exception))
@@ -26,7 +33,7 @@ function _find_stdlib_culprits(exception_string::String)
         r"\\e\[[0-9;]*[a-zA-Z]" => "",
     )
 
-    filter(_stdlib_old_or_new) do stdlib
+    filter(stdlibs_past_present_future) do stdlib
         pattern = Regex("(^|[^\\w])$(stdlib)(\$|[^\\w])")
         occursin(pattern, clean_exception_string)
     end
