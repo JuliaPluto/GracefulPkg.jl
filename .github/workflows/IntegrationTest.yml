@@ -21,12 +21,10 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                julia-version: ["1"]
+                julia-version: ['1']
                 os: [ubuntu-latest]
                 package:
-                    - { user: JuliaPluto, repo: PlutoDependencyExplorer.jl }
                     - { user: fonsp, repo: Pluto.jl }
-                    - { user: JuliaPluto, repo: PlutoSliderServer.jl }
 
         steps:
             - uses: actions/checkout@v4
