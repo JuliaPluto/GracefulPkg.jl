@@ -22,4 +22,22 @@ _project_key_order(key::String) =
 
 
 
-
+function with_active_env(f::Function, env_dir::String)
+    original_LP = copy(LOAD_PATH)
+    original_AP = Base.ACTIVE_PROJECT[]
+    
+    
+    new_LP = ["@", "@stdlib"]
+    new_AP = env_dir
+    try
+        # Activate the environment
+        copy!(LOAD_PATH, new_LP)
+        Base.ACTIVE_PROJECT[] = new_AP
+        
+        f()
+    finally
+        # Reset the pkg environment
+        copy!(LOAD_PATH, original_LP)
+        Base.ACTIVE_PROJECT[] = original_AP
+    end
+end

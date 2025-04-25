@@ -1,10 +1,11 @@
 import Pkg
 import TOML
 
+"""
+Default action: try the user task without changes.
 
-
-# Default action: try the user task without changes
-
+The field `auto_upgrade_old_manifest_format::Bool=true` can actually do one change: automatically upgrading the manifest format from v1 to v2 if needed.
+"""
 struct StrategyDoNothing <: Strategy
     auto_upgrade_old_manifest_format::Bool
 end
@@ -28,12 +29,12 @@ function action(strat::StrategyDoNothing, ctx::StrategyContext)
             if is_old
                 try
                     @debug "Upgrading Manifest.toml to new format"
-                    # TODO ENV
-                    Pkg.upgrade_manifest()
+                    with_active_env(env_dir) do
+                        Pkg.upgrade_manifest()
+                    end
                 catch e
                     @debug "Failed upgrade manifest" exception=(e, catch_backtrace())
                 end
-                        
             end
         end
     end
