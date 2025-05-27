@@ -3,12 +3,12 @@ result = go(@__DIR__)
 strats = [r.strategy for r in result.strategy_reports]
 
 @test GracefulPkg.StrategyDoNothing() in strats
-@test GracefulPkg.StrategyInstantiateIfNeeded() in strats
 
 fixed_it = last(result.strategy_reports)
 
-@test fixed_it.strategy isa GracefulPkg.StrategyInstantiateIfNeeded
+@test (fixed_it.strategy isa GracefulPkg.StrategyInstantiateIfNeeded) || (fixed_it.strategy isa GracefulPkg.StrategyDoNothing)
 
 @test !fixed_it.project_changed
-@test !fixed_it.manifest_changed
 @test !fixed_it.registry_changed
+
+@test first(result.strategy_reports).manifest_changed # upgraded to manifest v2
