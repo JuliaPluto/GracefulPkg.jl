@@ -29,7 +29,7 @@ function action(strat::StrategyDoNothing, ctx::StrategyContext)
             if is_old
                 try
                     @debug "Upgrading Manifest.toml to new format"
-                    with_active_env(env_dir) do
+                    with_active_env(ctx.env_dir) do
                         Pkg.upgrade_manifest()
                     end
                 catch e
