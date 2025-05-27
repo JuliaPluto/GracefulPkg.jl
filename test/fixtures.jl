@@ -12,6 +12,14 @@ if basename(homedir()) != "fons"
 end
 
 
+for dotjulia in Base.DEPOT_PATH
+    pptf = joinpath(dotjulia, "packages", "PlutoPkgTestF")
+    isdir(pptf) && rm(pptf, recursive=true)
+end
+
+
+
+
 
 dir = joinpath(@__DIR__, "fixtures")
 

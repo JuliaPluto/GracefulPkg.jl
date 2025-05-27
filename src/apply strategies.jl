@@ -20,7 +20,7 @@ const DEFAULT_STRATEGIES = (
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
     StrategyFixStdlibs(),
-    # TODO: StrategyPkgResolve(),
+    StrategyInstantiateIfNeeded(),
     StrategyUpdateRegistry(),
     StrategyLoosenCompat(),
     StrategyRemoveManifest(),
