@@ -11,4 +11,7 @@ fixed_it = last(result.strategy_reports)
 @test !fixed_it.project_changed
 @test !fixed_it.registry_changed
 
-@test first(result.strategy_reports).manifest_changed # upgraded to manifest v2
+import Pkg
+if isdefined(Pkg, :upgrade_manifest)
+    @test first(result.strategy_reports).manifest_changed # upgraded to manifest v2
+end
