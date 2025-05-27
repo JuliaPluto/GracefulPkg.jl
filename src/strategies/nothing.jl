@@ -38,5 +38,4 @@ function action(strat::StrategyDoNothing, ctx::StrategyContext)
             end
         end
     end
-    
 end
