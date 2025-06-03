@@ -13,7 +13,6 @@ function _find_compat_culprits(ctx::StrategyContext, d)
     )
 
     filter(keys(d["compat"])) do package_name
-        @info "Checking" package_name error_str
         occursin(package_name, error_str)
     end
 end
