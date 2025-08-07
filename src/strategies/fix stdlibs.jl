@@ -82,9 +82,11 @@ function action(::StrategyFixStdlibs, ctx::StrategyContext)
 
     _delete_compat_entries(ctx, to_fix)
     withenv("JULIA_PKG_PRECOMPILE_AUTO" => false) do
-        isempty(to_temporarily_add) || Pkg.add(to_temporarily_add)
-        Pkg.update(to_fix)
-        isempty(to_temporarily_add) || Pkg.rm(to_temporarily_add)
+        with_active_env(ctx.env_dir) do
+            isempty(to_temporarily_add) || Pkg.add(to_temporarily_add)
+            Pkg.update(to_fix)
+            isempty(to_temporarily_add) || Pkg.rm(to_temporarily_add)
+        end
     end
     _delete_compat_entries(ctx, to_fix)
 
