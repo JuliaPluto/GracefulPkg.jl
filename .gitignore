@@ -3,3 +3,4 @@ Manifest.toml
 
 # But don't ignore Manifest.toml files in test/fixtures
 !test/fixtures/**/Manifest.toml
+.DS_Store
