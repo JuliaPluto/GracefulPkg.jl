@@ -1,0 +1,30 @@
+name = "SomeComponents"
+uuid = "8337df56-e1d1-4463-aaeb-bef927d96d39"
+authors = [" <>"]
+version = "0.1.0"
+
+[deps]
+DyadEcosystemDependencies = "7bc808db-8006-421e-b546-062440d520b7"
+DyadInterface = "99806f68-afab-45ca-9d8c-ceff6bc61f54"
+Markdown = "d6f4376e-aef5-505a-96c1-9c027394607a"
+ModelingToolkit = "961ee093-0014-501f-94e3-6117800e7a78"
+OrdinaryDiffEq = "1dea7af3-3e70-54e6-95c3-0bf5283fa5ed"
+OrdinaryDiffEqDefault = "50262376-6c5a-4cf5-baba-aaf4f84d72d7"
+PrecompileTools = "aea7be01-6a6a-4083-8856-8a6e6704d82a"
+RuntimeGeneratedFunctions = "7e49a35a-f44a-4d26-94aa-eba1b4ca6b47"
+Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
+ThermalComponents = "084a29d9-4f48-4925-95b4-b7d4c79725f4"
+
+[compat]
+DyadEcosystemDependencies = "=0.10.1"
+Markdown = "1.11"
+ThermalComponents = "0.5.0"
+
+[extras]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["CSV", "DataFrames", "Plots", "Test"]
