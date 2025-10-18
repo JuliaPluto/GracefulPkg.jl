@@ -23,9 +23,7 @@ GracefulPkg.resolve() # works!
 
 
 ## Use in Pluto.jl
-*(TODO after release)* GracefulPkg.jl is used by [Pluto.jl](https://plutojl.org/) when launching a notebook with an embedded package environment. Pluto will try to reproduce the environment used to write the notebook. If this does not work, the strategies from GracefulPkg are used to make sure that the notebook can still launch.
-
-TODO this code is currently still in the Pluto codebase as the function `with_auto_fixes`.
+GracefulPkg.jl is used by [Pluto.jl](https://plutojl.org/) when launching a notebook with an embedded package environment. Pluto will try to reproduce the environment used to write the notebook. If this does not work, the strategies from GracefulPkg are used to make sure that the notebook can still launch.
 
 > 🙋 GracefulPkg is based on experiences from the Pluto developers, seeing countless notebooks "in the wild". Pluto notebooks should **always run**, trying to maintain as much of the original environment as possible. The strategies in GracefulPkg were found to fix most environments in the least invasive way possible.
 
@@ -33,14 +31,16 @@ TODO this code is currently still in the Pluto codebase as the function `with_au
 GracefulPkg comes with the following strategies as defaults:
 1. Do nothing
 1. Fix any stdlib compat issues (from "freed" stdlibs like Statistics or new stdlibs like StyledStrings)
+1. Run `Pkg.instantiate` if needed
 1. *(TODO)* Run `Pkg.build` on packages that asked for it
 1. Update registries
+1. Loosen version compat entries from Project.toml, for packages that asked for it in the error message.
 1. Remove Manifest.toml
-1. Remove Manifest.toml and loosen any version compat entries from Project.toml, leaving only `[deps]`.
+1. Remove Manifest.toml and remove all compat entries from Project.toml, leaving only `[deps]`.
+1. Remove Manifest.toml and Project.toml.
 
 
 # Test
-This package is tested against [a library](https://github.com/JuliaPluto/GracefulPkg.jl/tree/main/test/fixtures) of Project.toml + Manifest.toml files that we found in the wild, or that we hand-crafted to simulate a possible tricky situation.
-
+This package is tested against [a collection](https://github.com/JuliaPluto/GracefulPkg.jl/tree/main/test/fixtures) of Project.toml + Manifest.toml files that we found in the wild, or that we hand-crafted to simulate a possible tricky situation.
 
 This package is also tested with some older Julia versions (1.6, 1.8 and 1.9). This increases the number of tricky Julia combinations that we can test against, which hopefully means the package is more robust (for future Julia versions).
