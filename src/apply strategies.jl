@@ -61,7 +61,7 @@ end
 """
 function gracefully(
     task::Function;
-    strategies::Vector{Strategy}=collect(DEFAULT_STRATEGIES),
+    strategies::Vector{<:Strategy}=collect(DEFAULT_STRATEGIES),
     throw::Bool=true,
     env_dir::String=dirname(Base.active_project()),
 )::GraceReport
