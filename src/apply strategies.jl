@@ -67,7 +67,7 @@ function gracefully(
 )::GraceReport
     reports = StrategyReport[]
 
-    for strategy in strategies
+    for (i, strategy) in enumerate(strategies)
         @debug "Starting strat" strategy
         snapshot_before = take_project_manifest_snapshot(env_dir)
 
@@ -89,7 +89,13 @@ function gracefully(
         end
 
         text = action_text(strategy)
-        isempty(text) || @warn "Pkg operation failed. $(text) and trying again..."
+        if !isempty(text))
+            if i == 1
+                @info "$(text) and trying operation..."
+            else
+                @warn "Pkg operation failed. $(text) and trying again..."
+            end
+        end
 
         # try to fix it!
         try

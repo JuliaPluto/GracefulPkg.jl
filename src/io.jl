@@ -28,7 +28,7 @@ function Base.show(io::IO, ::MIME"text/plain", report::GracefulPkg.GraceReport)
             println(io, " - $(action)")
         end
         if is_success(report)
-            printstyled(io, "And the last one worked!\n"; color=:green)
+            printstyled(io, length(actions) == 1 ? "And it worked!\n" : "And the last one worked!\n"; color=:green)
         else
             print(io, "But in the end, ")
             printstyled(io, "nothing worked :( \n"; color=:light_red, bold=true)
@@ -41,9 +41,13 @@ function Base.show(io::IO, ::MIME"text/plain", report::GracefulPkg.GraceReport)
         
         last_shown_exception = Ref("asdf")
         
-        for r in reps
+        for (i, r) in enumerate(reps)
             e_str = sprint(showerror, r.exception; context=io)
-            printstyled(io, "-----------\n"; color=:light_black)
+            if i == 1
+                printstyled(io, "== More details per strategy: ==\n"; color=:light_black)
+            else
+                printstyled(io, "---------\n"; color=:light_black)
+            end
             printstyled(io, "I applied the strategy: $(action_text_not_empty(r.strategy))...\n"; bold=true)
             # println(io)
             if is_success(r)
