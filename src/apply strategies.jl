@@ -89,7 +89,7 @@ function gracefully(
         end
 
         text = action_text(strategy)
-        if !isempty(text))
+        if !isempty(text)
             if i == 1
                 @info "$(text) and trying operation..."
             else
