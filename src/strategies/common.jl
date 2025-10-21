@@ -1,5 +1,5 @@
 import Pkg
-
+import TOML
 
 function is_resolve_error(ctx::StrategyContext)
     ctx.previous_exception isa Pkg.Resolve.ResolverError
@@ -12,7 +12,7 @@ end
 
 function write_project_toml(project_path::String, toml)
     write(project_path, sprint() do io
-        Pkg.TOML.print(io, toml; sorted=true, by=(key -> (_project_key_order(key), key)))
+        TOML.print(io, toml; sorted=true, by=(key -> (_project_key_order(key), key)))
     end)
 end
 

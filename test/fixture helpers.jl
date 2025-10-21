@@ -2,6 +2,7 @@
 import GracefulPkg
 import Pkg
 using Logging
+import TOML
 
 function go(original_dir)
 
@@ -55,7 +56,7 @@ function final_project_manifest_parsed(result)
     sa = result.strategy_reports[end].snapshot_after
 
     yo(x::Nothing) = nothing
-    yo(x::String) = Pkg.TOML.parse(x)
+    yo(x::String) = TOML.parse(x)
 
     yo(sa.project), yo(sa.manifest)
 end
