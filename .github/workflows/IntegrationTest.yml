@@ -24,7 +24,7 @@ jobs:
                 julia-version: ['1']
                 os: [ubuntu-latest]
                 package:
-                    - { user: fonsp, repo: Pluto.jl }
+                    - { user: JuliaPluto, repo: Pluto.jl }
 
         steps:
             - uses: actions/checkout@v6
