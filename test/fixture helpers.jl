@@ -36,8 +36,8 @@ function go(original_dir)
         # this should work
         GracefulPkg.instantiate(; update_registry=false, allow_autoprecomp=false)
 
-
-        @assert deps_before == get_deps_safe()
+        deps_after = get_deps_safe()
+        @assert deps_before == deps_after "Dependencies changed during GracefulPkg operations. Before: $deps_before After: $deps_after"
 
         result
     catch e
