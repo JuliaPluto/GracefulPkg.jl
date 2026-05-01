@@ -115,9 +115,6 @@ function gracefully(
             (false, nothing, e, catch_backtrace())
         end
 
-        # TODO: restore the Project+Manifest?
-
-
         report = StrategyReport(;
             strategy,
             success,
